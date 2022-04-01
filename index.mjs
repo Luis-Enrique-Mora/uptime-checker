@@ -5,6 +5,10 @@
 import http from 'http';
 import url from 'url';
 import { StringDecoder } from 'string_decoder';
+import config from './config.mjs';
+import _data from './lib/data.mjs';
+import handlers from './lib/handlers.mjs';
+import helpers from './lib/helpers.mjs';
 
 // * The server should respond to all request with a string
 const server = http.createServer( function( req, res ){
@@ -30,14 +34,15 @@ const server = http.createServer( function( req, res ){
     const decoder = new StringDecoder( 'utf-8' );
     var buffer = '';
 
+    //* Choose the handler this request should go to, if one is not found, go to notFound
+    var choosenHandler = typeof(router[trimmedPath]) !== 'undefine' ? router[trimmedPath] : handlers.notFound;
+
     req.on( 'data', function( data ){
         buffer += decoder.write(data);
     } );
 
     req.on( 'end', function(){
         buffer += decoder.end();
-        //* Choose the handler this request should go to, if one is not found, go to notFound
-        var choosenHandler = typeof(router[trimmedPath]) !== 'undefine' ? router[trimmedPath] : handlers.notFound;
 
         //* construct the data object to send to the handler
         var data = {
@@ -45,7 +50,7 @@ const server = http.createServer( function( req, res ){
             'queryStringObject' : queryStringObject,
             'method' : method,
             'headers' : headers,
-            'payload' : buffer
+            'payload' : helpers.parseJsonToObject( buffer )
         };
 
         //* route the request to the handler specified in the router
@@ -56,13 +61,14 @@ const server = http.createServer( function( req, res ){
             //* Use the payload called back by the handler, or default
             payload = typeof( payload ) == 'object' ? payload : {};
 
-            //* combert the payload to a string
+            //* comvert the payload to a string
             var payloadString = JSON.stringify( payload );
 
             res.setHeader( 'Content-type', 'application/json' );
             res.writeHead( statusCode )
             res.end( payloadString );
         });
+
         console.log( 
         `**request Log**
     
@@ -73,25 +79,14 @@ const server = http.createServer( function( req, res ){
         QueryString:`, queryStringObject );
     } );
 
-}); // TODO: creating a server object, which recieves a callback with 2 parameters: request and response
+} ); // creating a server object, which recieves a callback with 2 parameters: request and response
 
 // * Start server, and have in listenig on port 3000
-server.listen( 3000, () => {
-    console.log( 'server listening on port 3000' );
-});
+server.listen( config.port, () => {
+    console.log( `server listening on port ${config.port}` );
+} );
 
-//* Define a request router
-const handlers = {};
-
-//* Sample handler
-handlers.sample = function( data, callback ){
-    //* callback a http status code, and a payload object
-    callback( 406, { 'name' : 'sample handler' } );
-}
-
-handlers.notFound = function( data, callback ){
-    callback(404);
-}
 var router = {
-    'sample' : handlers.sample
+    'users' : handlers.users,
+    'ping' : handlers.ping
 }
