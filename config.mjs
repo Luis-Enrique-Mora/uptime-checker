@@ -10,14 +10,16 @@ const environment = {};
 environment.staging = {
     'port' : 3000,
     'envName' : 'staging',
-    'hashingSecret' : 'secretHashigString'
+    'hashingSecret' : 'secretHashigString',
+    'maxChecks' : 5
 }
 
 //* Production environment
 environment.production = {
     'port' : 5000,
     'envName' : 'production',
-    'hashingSecret' : 'secretHashigString'
+    'hashingSecret' : 'secretHashigString',
+    'maxChecks' : 5
 }
 
 //* Determine which environment was passed as a command-line argument
