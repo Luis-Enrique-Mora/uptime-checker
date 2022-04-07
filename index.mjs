@@ -89,5 +89,6 @@ server.listen( config.port, () => {
 var router = {
     'users' : handlers.users,
     'ping' : handlers.ping,
-    'tokens' : handlers.tokens
+    'tokens' : handlers.tokens,
+    'checks' : handlers.checks
 }
