@@ -1,11 +1,12 @@
 //* Dependencies
 import server from './lib/server.mjs';
-// TODO import workers from './lib/workers.mjs';
+import workers from './lib/workers.mjs';
 
 var app = {};
 
 app.init = () => {
     server.init();
+    workers.init();
 };
 
 app.init();
