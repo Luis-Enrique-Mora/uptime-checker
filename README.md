@@ -1,10 +1,4 @@
-## Node server notes
+## Url monitoring
 
-Creating node server with raw node, the code will look gross but is was done for educational purposes, underestandig how node works under the hood.
+Url monitoring is a web app for monitoring sites or Apis, it checks if the site or server api is up 🔺 or down 🔻, every time there's a change on the state it will be notify to the user via text message
 
-### Keywords
-`QueryString` : Is the data we send through the path example: `https://myapi/user?id=1` could be known as params
-
-`Payload` : Is the data we send as a body, the data and is not sent through the path or url as the queryString
-
-`Method` : Could be `GET`, `POST`, `PUT`, `DELETE`
