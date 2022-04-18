@@ -1,4 +1,4 @@
-## Url Monitoring 📈🔍
+## Url Monitoring 🖥️🔍
 
 Url monitoring is a web app for monitoring sites or Apis, it checks if the site or api is up 🔺 or down 🔻, every time there's a change on the state (up or down) it will be notify to the user via text message.
 
