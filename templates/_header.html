@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <base href="{global.baseUrl}"/>
+        <!-- Mete tags -->
+        <title>{head.title}| {global.appName}</title>
+        <meta name="description" content="{head.description}">
+        <script type="text/javascript" charset="utf-8" src="public/app.mjs"></script>
+        <link rel="stylesheet" href="text/css" href="public/app.css">
+    </head>
+
+    <body class="{body.class}">
+        <!-- Page wrapper -->
+        <div class="wrapper">
+        
+            <!-- header -->
+            <div class="header">
+                <!--Logo-->
+                <a href="/" class="logo"></a>
+                <!--Navigation-->
+                <ul class="menu">
+                    <li href="/">
+                        <a href="">Home</a>
+                    </li>
+
+                    <li>
+                        <a class="loggedOut" href="/">Signup</a>
+                    </li>
+
+                    <li>
+                        <a class="loggedOut" href="/">Login</a>
+                    </li>
+
+                    <li>
+                        <a class="loggedIn" href="/">Dashboard</a>
+                    </li>
+
+                    <li>
+                        <a class="loggedIn" href="/">Account Settings</a>
+                    </li>
+                    
+                    <li>
+                        <a class="loggedIn" href="/">Logout</a>
+                    </li>
+                </ul>
+
+            </div>
+
+            <div class="content">
