@@ -167,6 +167,15 @@ app.bindForms = function() {
     }
 };
 
+app.bindLogOutButton = function() {
+    document.getElementById( 'logoutButton' ).addEventListener( 'click', function(e) {
+        // Stop it from default redirecting anywhere
+        e.preventDefault();
+        // Log the user out
+        app.logUserOut();
+    } );
+};
+
 app.logUserOut = function( redirectUser ) {
     // set redirectUser to default to true
     redirectUser =  typeof( redirectUser ) == 'boolean' ? redirectUser : true;
@@ -181,10 +190,10 @@ app.logUserOut = function( redirectUser ) {
 
     app.client.request( undefined, 'api/tokens', 'DELETE', queryStringObject, undefined, function( statusCode, responsePayload ) {
         // Set the app.config token as false
-        app.setSessionToken(false);
+        app.setSessionToken( false );
 
         // Send the user to the logged out page
-        if(redirectUser){
+        if( redirectUser ){
             window.location = '/session/deleted';
         }
 
@@ -336,16 +345,20 @@ app.tokenRenewalToken = function() {
 
 // Init the bootstrapping
 app.init =  function() {
+    // Bind all form submissions
     app.bindForms();
-}
+
+    // Bind logout button
+    app.bindLogOutButton();
+
+    // Get the token from localStorage
+    app.getSessionToken();
+
+    // Renew token
+    app.tokenRenewalToken();
+};
 
 // Call the init processes after the window loads
 window.onload = function() {
     app.init();
 }
-
-
-
-
-
-
