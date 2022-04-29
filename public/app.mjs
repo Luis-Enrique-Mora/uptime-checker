@@ -107,8 +107,6 @@ app.bindForms = function() {
                         let classOfElement = typeof( elements[ i ].classList.value ) == 'string' && elements[ i ].classList.value.length > 0 ? elements[ i ].classList.value : '';
                         let valueOfElement = elements[ i ].type == 'checkbox' && classOfElement.indexOf( 'multiselect') == -1 ? elements[ i ].checked : classOfElement.indexOf( 'intval' ) == -1 ? elements[ i ].value : parseInt( elements[ i ].value );
                         let elementIsChecked = elements[ i ].checked;
-                        debugger;
-                        console.log( classOfElement, valueOfElement, elementIsChecked , i );
 
                         // Override the method of the form if the input's name in method
                         let nameOfElement = elements[ i ].name;
@@ -131,7 +129,7 @@ app.bindForms = function() {
                                     payload[ nameOfElement ].push( valueOfElement );
                                 }
                             } else {
-                                if( valueOfElement == true ) {
+                                if( valueOfElement == true || nameOfElement == 'tosAgreement') {
                                     payload[ nameOfElement ] = JSON.stringify( valueOfElement );
                                 } else {
                                     payload[ nameOfElement ] = valueOfElement;
@@ -293,11 +291,11 @@ app.setLoggedInClass = function( add ) {
 
 // Set the session token in the app.config object as well as localstorage
 app.setSessionToken = function( token ) {
-    app.config.sessionToken = token;
-    let tokenString = JSON.stringify( token );
-    localStorage.setItem( 'token', tokenString );
+    app.config.sessionToken = JSON.parse( token );
+    let jsonToken = JSON.parse( token );
+    localStorage.setItem( 'token', token );
 
-    if( typeof( token ) == 'object' ) {
+    if( typeof( jsonToken ) == 'object' ) {
         app.setLoggedInClass( true );
     } else {
         app.setLoggedInClass( false );
