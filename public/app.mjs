@@ -267,7 +267,7 @@ app.getSessionToken = function() {
             if( typeof( token ) == 'object' ) {
                 app.setLoggedInClass( true );
             } else {
-                app.config.sessionToken( false );
+                app.config.sessionToken = false;
             }
         } catch (e) {
             app.config.sessionToken = false;
@@ -277,9 +277,9 @@ app.getSessionToken = function() {
 };
 
 app.setLoggedInClass = function( add ) {
-    let target = document.querySelector( 'body' );
+    let target = document.querySelector( "body" );
     if( add ) {
-        target.classList.add( 'logguedIn' );
+        target.classList.add( 'loggedIn' );
     } else {
         target.classList.remove( 'loggedIn' );
     }
@@ -287,7 +287,7 @@ app.setLoggedInClass = function( add ) {
 
 // Set the session token in the app.config object as well as localstorage
 app.setSessionToken = function( token ) {
-    app.config.setSessionToken = token;
+    app.config.sessionToken = token;
     let tokenString = JSON.stringify( token );
     localStorage.setItem( 'token', tokenString );
 
