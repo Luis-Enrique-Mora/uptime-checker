@@ -107,6 +107,8 @@ app.bindForms = function() {
                         let classOfElement = typeof( elements[ i ].classList.value ) == 'string' && elements[ i ].classList.value.length > 0 ? elements[ i ].classList.value : '';
                         let valueOfElement = elements[ i ].type == 'checkbox' && classOfElement.indexOf( 'multiselect') == -1 ? elements[ i ].checked : classOfElement.indexOf( 'intval' ) == -1 ? elements[ i ].value : parseInt( elements[ i ].value );
                         let elementIsChecked = elements[ i ].checked;
+                        debugger;
+                        console.log( classOfElement, valueOfElement, elementIsChecked , i );
 
                         // Override the method of the form if the input's name in method
                         let nameOfElement = elements[ i ].name;
@@ -129,7 +131,11 @@ app.bindForms = function() {
                                     payload[ nameOfElement ].push( valueOfElement );
                                 }
                             } else {
-                                payload[ nameOfElement ] = JSON.stringify( valueOfElement );
+                                if( valueOfElement == true ) {
+                                    payload[ nameOfElement ] = JSON.stringify( valueOfElement );
+                                } else {
+                                    payload[ nameOfElement ] = valueOfElement;
+                                }
                             }
                         }
                     }
