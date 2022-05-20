@@ -50,6 +50,7 @@ app.client.request = function( headers, path, method, queryStringObject, payload
 
     // If there is a current session token set, add that as a header
     if( app.config.sessionToken ) {
+        console.log( 'Entra a setear token');
         xhr.setRequestHeader( 'token', app.config.sessionToken.id );
     }
 
@@ -129,7 +130,7 @@ app.bindForms = function() {
                                     payload[ nameOfElement ].push( valueOfElement );
                                 }
                             } else {
-                                if( valueOfElement == true || nameOfElement == 'tosAgreement') {
+                                if( nameOfElement == 'tosAgreement') {
                                     payload[ nameOfElement ] = JSON.stringify( valueOfElement );
                                 } else {
                                     payload[ nameOfElement ] = valueOfElement;
@@ -139,7 +140,7 @@ app.bindForms = function() {
                     }
                 }
 
-                // if method is delete, the payload should be a quere=yStringObject instead
+                // if method is delete, the payload should be a queryStringObject instead
                 let queryStringObject =  method == 'DELETE' ? payload : {};
 
                 // Call the API
@@ -337,6 +338,65 @@ app.renewToken = function( callback ) {
     }
 };
 
+// Load data on the page
+app.loadDataOnPage = function() {
+    // Get the current page from the body class
+    let bodyClasses = document.querySelector( 'body' ).classList;
+    let primaryClass = typeof( bodyClasses[ 0 ] ) == 'string' ? bodyClasses[ 0 ] : false;
+
+    // Logic for account settings page
+    if( primaryClass == 'accountEdit' ) {
+        app.loadAccountEditPage();
+    }
+
+    // logic for dashboard page
+    if( primaryClass == 'checksList' ) {
+        app.loadChecksListPage();
+    }
+
+    // Logic for check details page
+    if( primaryClass == 'checksEdit' ) {
+        app.loadChecksEditPage();
+    }
+};
+
+app.loadAccountEditPage = function() {
+    // Get the phone number from the current token, or log the user out if none is there
+    let phone =  typeof( app.config.sessionToken.phone ) == 'string' ? app.config.sessionToken.phone : false;
+
+    if( phone ) {
+        // Fetch the user data
+
+        var queryStringObject = {
+            'phone' : phone
+        };
+
+        app.client.request( undefined, 'api/users', 'GET', queryStringObject, undefined, function( statusCode, responsePayload ) {
+            let responseToJSON = JSON.parse( responsePayload );
+            if( statusCode == 200 ) {
+                // Put data into the forms as values where needed
+                document.querySelector( '#accountEdit1 .firstNameInput' ).value = responseToJSON.firstName;
+                document.querySelector( '#accountEdit1 .lastNameInput').value = responseToJSON.lastName
+                document.querySelector( '#accountEdit1 .displayPhoneInput' ).value = responseToJSON.phone;
+
+                // Put hidden phone field into both forms
+                let hiddenPhoneInputs = document.querySelectorAll( 'input.hiddenPhoneNumberInput' );
+                for( let i = 0; i < hiddenPhoneInputs.length; i++ ) {
+                    hiddenPhoneInputs[ i ].value = responseToJSON.phone;
+                }
+            } else {
+                // If the request comes back as something other than 200, log the user our ( on the assumption that the api in temporarily down or the token user is bad )
+                console.log( 'StatusCode', statusCode);
+                app.logUserOut();
+            }
+        } );
+
+    } else {
+        console.log('No phone');
+        app.logUserOut();
+    }
+};
+
 app.tokenRenewalToken = function() {
     setInterval( () => {
         app.renewToken( function( error ) {
@@ -344,7 +404,7 @@ app.tokenRenewalToken = function() {
                 console.log( 'Token renewed successfully @' + Date.now() );
             }
         } );
-    }, 1000 * 60 );
+    }, 1000 * 60 * 60 );
 };
 
 // Init the bootstrapping
@@ -360,6 +420,8 @@ app.init =  function() {
 
     // Renew token
     app.tokenRenewalToken();
+
+    app.loadDataOnPage();
 };
 
 // Call the init processes after the window loads
