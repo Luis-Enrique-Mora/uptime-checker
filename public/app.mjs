@@ -145,7 +145,6 @@ app.bindForms = function() {
                 app.client.request( undefined, path, method, queryStringObject, payload, function( statusCode, responsePayload ) {
                     //Display an error on the form if needed
                     if( statusCode > 399 ) {
-                        console.log( 'entra al error');
                         if( statusCode == 403 || statusCode == 401 ) {
                             // log the user out
                             app.logUserOut();
@@ -160,7 +159,6 @@ app.bindForms = function() {
                             document.querySelector( '#' + formId + ' .formError' ).style.display = 'block';
                         }
                     } else {
-                        console.log('entra a redirigir');
                         // If successful, send to form response processor
                         app.formResponseProcessor( formId, payload, responsePayload );
                     }
@@ -373,7 +371,6 @@ app.loadChecksListPage = function() {
             // Determine how many checks the user has
                 var allChecks = JSON.parse( responsePayload );
                 allChecks = typeof( allChecks.checks ) == 'object' && allChecks.checks instanceof Array && allChecks.checks.length > 0 ? allChecks.checks : [];
-                console.log( allChecks.checks );
                 if( allChecks.length > 0 ) {
 
                     // Show each created check as a new row in the table
@@ -456,13 +453,11 @@ app.loadAccountEditPage = function() {
                 }
             } else {
                 // If the request comes back as something other than 200, log the user our ( on the assumption that the api in temporarily down or the token user is bad )
-                console.log( 'StatusCode', statusCode);
                 app.logUserOut();
             }
         } );
 
     } else {
-        console.log('No phone');
         app.logUserOut();
     }
 };
@@ -481,7 +476,6 @@ app.loadChecksEditPage = function() {
         app.client.request(undefined, 'api/checks', 'GET', queryStringObject, undefined, function( statusCode, responsePayload ) {
             if(statusCode == 200) {
                 var allChecks = JSON.parse( responsePayload );
-                console.log( allChecks );
                 // Put the hidden id field into both forms
                 var hiddenIdInputs = document.querySelectorAll( "input.hiddenIdInput" );
                 for( var i = 0; i < hiddenIdInputs.length; i++ ){
